@@ -46,19 +46,15 @@ for option, value in defOptions do
     end
 end
 
-GUI = {
-    bg = false,
-    chatLines = {},
-    chatContainer = false,
-    config = false,
-}
+GUI = import('/lua/ui/controls.lua').Get()
+GUI.chatLines = GUI.chatLines or {}
 
 local FactionsIcon = {}
 local Factions = import('/lua/factions.lua').Factions
 for k, FactionData in Factions do
-    table.insert( FactionsIcon, FactionData.Icon )
+    table.insert(FactionsIcon, FactionData.Icon)
 end
-table.insert( FactionsIcon, '/widgets/faction-icons-alpha_bmp/observer_ico.dds' )
+table.insert(FactionsIcon, '/widgets/faction-icons-alpha_bmp/observer_ico.dds')
 
 
 local chatColors = {'ffffffff', 'ffff4242', 'ffefff42','ff4fff42', 'ff42fff8', 'ff424fff', 'ffff42eb'}
@@ -374,11 +370,11 @@ function SetupChatScroll()
         local curEntry = 1
         local curTop = 1
         local tempsize = 0
-        
+
         if GUI.bg:IsHidden() then
             tempTop = math.max(DataSize() - numLines()+1, 1)
         end
-        
+
         for i, v in chatHistory do
             if IsValidEntry(v) then
                 if tempsize + table.getsize(v.wrappedtext) < tempTop then
@@ -456,19 +452,19 @@ function SetupChatScroll()
                 end
 
                 line.EntryID = curEntry
-                
+
                 if GUI.bg:IsHidden() then
-                
+
                     line.curHistory = chatHistory[curEntry]
                     if line.curHistory.new or line.curHistory.time == nil then
                         line.curHistory.time = 0
                     end
-                    
+
                     if line.curHistory.time < ChatOptions.fade_time then
                         line:Show()
 
                         UIUtil.setVisible(line.lineStickybg, ChatOptions.feed_background)
-                        
+
                         if line.name:GetText() == '' then
                             line.teamColor:Hide()
                         end
@@ -495,7 +491,7 @@ function SetupChatScroll()
                         end
                         line:SetNeedsFrameUpdate(true)
                     end
-                    
+
                 end
             else
                 line.name:Disable()
@@ -876,7 +872,7 @@ function ToggleChat()
         GUI.bg:Hide()
         GUI.chatEdit.edit:AbandonFocus()
         GUI.bg:SetNeedsFrameUpdate(false)
-        
+
         if ChatOptions.feed_persist then
             GUI.chatContainer:CalcVisible()
         else
@@ -912,7 +908,7 @@ function CreateChatList(parent)
     container.entries = {}
     local function CreatePlayerEntry(data)
         if not data.human and not data.civilian then
-            data.nickname = UiUtilsS.trim(string.gsub(data.nickname,'%b()', '' ))
+            data.nickname = UiUtilsS.trim(string.gsub(data.nickname,'%b()', ''))
         end
         local text = UIUtil.CreateText(container, data.nickname, 12, "Arial")
         text:SetColor('ffffffff')
